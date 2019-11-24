@@ -32,6 +32,15 @@ class GameInfo:
             for x in range(self.game_dim[0]):
                 yield (x, y), self.cell_pos((x, y), center=False)
 
+    @property
+    def flag_total(self):
+        if self.game_dim == (10, 8):
+            return 10
+        if self.game_dim == (18, 14):
+            return 40
+        if self.game_dim == (24, 20):
+            return 99
+
 
 def get_screen():
     return pyautogui.screenshot().resize(pyautogui.size())

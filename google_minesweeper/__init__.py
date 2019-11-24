@@ -15,6 +15,10 @@ def click_coord(info: GameInfo, coord):
     pyautogui.click(position, duration=0, button='left')
 
 
+def check_win(info: GameInfo):
+    return len(info.flagged) == info.flag_total
+
+
 def main():
     game = locate_game()
     if not game:
@@ -30,6 +34,10 @@ def main():
         moves = find_moves(game, state)
 
         if len(moves) == 0:
+            if check_win(game):
+                print('\nGame won')
+                return
+
             print('\nNo more moves')
             r = input('\nUpdate and continue? (y/n) ')
             if r.lower()[0] == 'y':
@@ -43,6 +51,10 @@ def main():
                 flag_coord(game, move[1])
             elif move[0] == 'click':
                 click_coord(game, move[1])
+
+        if check_win(game) or state.count(-1) == game.flag_total - len(game.flagged):
+            print('\nGame won')
+            return
 
 
 if __name__ == '__main__':
