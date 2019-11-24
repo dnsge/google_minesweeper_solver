@@ -133,7 +133,16 @@ def find_moves(info: GameInfo, game_array):
                             if tup not in moves and f_index not in info.flagged and coord_in_game(info, f_coord):
                                 moves.append(tup)
                                 info.flagged.append(f_index)
-                elif flagged == value:
+
+    for y in range(info.game_dim[1]):
+        for x in range(info.game_dim[0]):
+            index = get_grid_index((x, y), info.game_dim[0])
+            value = game_array[index]
+            if value > 0:
+                neighbor_indexes = get_neighbor_indexes((x, y), info.game_dim[0], info.game_dim[1])
+                neighbors = get_neighbors(neighbor_indexes, game_array)
+                flagged = neighbors.count(-2)
+                if flagged == value:
                     for i in range(9):
                         if neighbors[i] == -1 and i != 4:
                             c_coord = neighbor_num_to_coord(i, (x, y))
