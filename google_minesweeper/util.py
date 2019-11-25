@@ -44,6 +44,10 @@ def get_grid_index(coord, width):
     return coord[1] * width + coord[0]
 
 
+def get_grid_coord(index, width):
+    return index % width, index // width
+
+
 def default_access(lst, index, default=0):
     try:
         if index < 0:
