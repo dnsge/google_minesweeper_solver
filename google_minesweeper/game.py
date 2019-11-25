@@ -3,7 +3,7 @@ from functools import partial
 import pyautogui
 
 from google_minesweeper.util import get_grid_index, is_interesting_color, is_undiscovered, rgb_close, \
-    get_neighbor_indexes, get_neighbors, neighbor_num_to_coord, coord_in_game
+    get_neighbor_indexes, get_neighbors, neighbor_num_to_coord, coord_in_game, rgb_closes
 
 
 class GameInfo:
@@ -96,15 +96,15 @@ def get_game_state(info: GameInfo):
                     number = -1
                 if rgb_close(color, (51, 118, 203, 255)):  # Blue 1
                     number = 1
-                elif rgb_close(color, (80, 139, 70, 255)):  # Green 2
+                elif rgb_closes(color, [(80, 139, 70, 255), (46, 126, 46, 255)]):  # Green 2
                     number = 2
-                elif rgb_close(color, (195, 62, 56, 255)):  # Red 3
+                elif rgb_closes(color, [(195, 62, 56, 255), (199, 40, 45, 255)]):  # Red 3
                     number = 3
                 elif rgb_close(color, (112, 44, 156, 255)):  # Purple 4
                     number = 4
                 elif rgb_close(color, (241, 148, 54, 255)):  # Orange 5
                     number = 5
-                elif rgb_close(color, (48, 112, 124, 255)):  # Aqua 6
+                elif rgb_closes(color, [(48, 112, 124, 255), (18, 134, 151, 255)]):  # Aqua 6
                     number = 6
 
                 if number != 0:

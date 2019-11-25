@@ -10,10 +10,16 @@ def rgb_close(first, second, threshold=10):
     return r <= threshold and g <= threshold and b <= threshold and a <= threshold
 
 
+def rgb_closes(first, others, threshold=10):
+    return any(rgb_close(first, item, threshold=threshold) for item in others)
+
+
 def is_undiscovered(color_tup):
     if rgb_close(color_tup, (180, 212, 101, 255)):  # Light green cell
         return True
     if rgb_close(color_tup, (172, 206, 94, 255)):  # Dark green cell
+        return True
+    if rgb_close(color_tup, (146, 202, 57, 255)):  # Other light green
         return True
 
     return False
@@ -23,6 +29,8 @@ def is_interesting_color(info, color_tup):
     if rgb_close(color_tup[1], (224, 195, 163, 255)):  # Light tan
         return False
     if rgb_close(color_tup[1], (211, 185, 157, 255)):  # Dark tan
+        return False
+    if rgb_close(color_tup[1], (206, 170, 135, 255)):  # Other dark tan
         return False
     if rgb_close(color_tup[1], (144, 173, 77, 255)):  # Light green cell border
         return False
