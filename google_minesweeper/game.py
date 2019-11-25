@@ -117,11 +117,12 @@ def get_game_state(info: GameInfo):
     return game_array
 
 
-def flag_if_new(coord, idx, lst, info: GameInfo):
+def flag_if_new(coord, idx, lst, info: GameInfo, game_array):
     tup = ('flag', coord)
     if tup not in lst and idx not in info.flagged and coord_in_game(info, coord):
         lst.append(tup)
         info.flagged.append(idx)
+        game_array[idx] = -2  # Flag in memory
         return True
 
     return False
@@ -151,7 +152,7 @@ def find_moves(info: GameInfo, game_array):
                         if neighbors[i] == -1 and i != 4:
                             f_coord = neighbor_num_to_coord(i, (x, y))
                             f_index = neighbor_indexes[i]
-                            flag_if_new(f_coord, f_index, moves, info)
+                            flag_if_new(f_coord, f_index, moves, info, game_array)
 
                 # Try pattern recognition
                 if value == 2:
@@ -160,29 +161,29 @@ def find_moves(info: GameInfo, game_array):
                             neighbors[6] == neighbors[7] == neighbors[8] == -1:
                         coord1 = neighbor_num_to_coord(6, (x, y))
                         coord2 = neighbor_num_to_coord(8, (x, y))
-                        flag_if_new(coord1, neighbor_indexes[6], moves, info)
-                        flag_if_new(coord2, neighbor_indexes[8], moves, info)
+                        flag_if_new(coord1, neighbor_indexes[6], moves, info, game_array)
+                        flag_if_new(coord2, neighbor_indexes[8], moves, info, game_array)
                     elif neighbors[3] == neighbors[5] == 1 and \
                             neighbors[0] == neighbors[1] == neighbors[2] == -1 and \
                             neighbors[6] == neighbors[7] == neighbors[8] == 0:
                         coord1 = neighbor_num_to_coord(0, (x, y))
                         coord2 = neighbor_num_to_coord(2, (x, y))
-                        flag_if_new(coord1, neighbor_indexes[0], moves, info)
-                        flag_if_new(coord2, neighbor_indexes[2], moves, info)
+                        flag_if_new(coord1, neighbor_indexes[0], moves, info, game_array)
+                        flag_if_new(coord2, neighbor_indexes[2], moves, info, game_array)
                     elif neighbors[1] == neighbors[7] == 1 and \
                             neighbors[0] == neighbors[3] == neighbors[6] == -1 and \
                             neighbors[2] == neighbors[5] == neighbors[8] == 0:
                         coord1 = neighbor_num_to_coord(0, (x, y))
                         coord2 = neighbor_num_to_coord(6, (x, y))
-                        flag_if_new(coord1, neighbor_indexes[0], moves, info)
-                        flag_if_new(coord2, neighbor_indexes[6], moves, info)
+                        flag_if_new(coord1, neighbor_indexes[0], moves, info, game_array)
+                        flag_if_new(coord2, neighbor_indexes[6], moves, info, game_array)
                     elif neighbors[1] == neighbors[7] == 1 and \
                             neighbors[0] == neighbors[3] == neighbors[6] == 0 and \
                             neighbors[2] == neighbors[5] == neighbors[8] == -1:
                         coord1 = neighbor_num_to_coord(2, (x, y))
                         coord2 = neighbor_num_to_coord(8, (x, y))
-                        flag_if_new(coord1, neighbor_indexes[2], moves, info)
-                        flag_if_new(coord2, neighbor_indexes[8], moves, info)
+                        flag_if_new(coord1, neighbor_indexes[2], moves, info, game_array)
+                        flag_if_new(coord2, neighbor_indexes[8], moves, info, game_array)
 
     for y in range(info.game_dim[1]):
         for x in range(info.game_dim[0]):
@@ -200,6 +201,5 @@ def find_moves(info: GameInfo, game_array):
                             tup = ('click', c_coord)
                             if tup not in moves and c_index not in info.flagged and coord_in_game(info, c_coord):
                                 moves.append(tup)
-                                print('clicking ' + str(c_coord))
 
     return moves
