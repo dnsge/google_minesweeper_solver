@@ -145,49 +145,44 @@ def find_moves(info: GameInfo, game_array):
 
                 undiscovered = neighbors.count(-1)
                 flagged = neighbors.count(-2)
-                added_count = 0
+
                 if undiscovered + flagged == value:
                     for i in range(9):
                         if neighbors[i] == -1 and i != 4:
                             f_coord = neighbor_num_to_coord(i, (x, y))
                             f_index = neighbor_indexes[i]
-                            added_count += int(flag_if_new(f_coord, f_index, moves, info))
-                            # tup = ('flag', f_coord)
-                            # if tup not in moves and f_index not in info.flagged and coord_in_game(info, f_coord):
-                            #     moves.append(tup)
-                            #     added_count += 1
-                            #     info.flagged.append(f_index)
+                            flag_if_new(f_coord, f_index, moves, info)
 
-                if True:  # Try pattern recognition
-                    if value == 2:
-                        if neighbors[3] == neighbors[5] == 1 and \
-                                neighbors[0] == neighbors[1] == neighbors[2] == 0 and \
-                                neighbors[6] == neighbors[7] == neighbors[8] == -1:
-                            coord1 = neighbor_num_to_coord(6, (x, y))
-                            coord2 = neighbor_num_to_coord(8, (x, y))
-                            flag_if_new(coord1, neighbor_indexes[6], moves, info)
-                            flag_if_new(coord2, neighbor_indexes[8], moves, info)
-                        elif neighbors[3] == neighbors[5] == 1 and \
-                                neighbors[0] == neighbors[1] == neighbors[2] == -1 and \
-                                neighbors[6] == neighbors[7] == neighbors[8] == 0:
-                            coord1 = neighbor_num_to_coord(0, (x, y))
-                            coord2 = neighbor_num_to_coord(2, (x, y))
-                            flag_if_new(coord1, neighbor_indexes[0], moves, info)
-                            flag_if_new(coord2, neighbor_indexes[2], moves, info)
-                        elif neighbors[1] == neighbors[7] == 1 and \
-                                neighbors[0] == neighbors[3] == neighbors[6] == -1 and \
-                                neighbors[2] == neighbors[5] == neighbors[8] == 0:
-                            coord1 = neighbor_num_to_coord(0, (x, y))
-                            coord2 = neighbor_num_to_coord(6, (x, y))
-                            flag_if_new(coord1, neighbor_indexes[0], moves, info)
-                            flag_if_new(coord2, neighbor_indexes[6], moves, info)
-                        elif neighbors[1] == neighbors[7] == 1 and \
-                                neighbors[0] == neighbors[3] == neighbors[6] == 0 and \
-                                neighbors[2] == neighbors[5] == neighbors[8] == -1:
-                            coord1 = neighbor_num_to_coord(2, (x, y))
-                            coord2 = neighbor_num_to_coord(8, (x, y))
-                            flag_if_new(coord1, neighbor_indexes[2], moves, info)
-                            flag_if_new(coord2, neighbor_indexes[8], moves, info)
+                # Try pattern recognition
+                if value == 2:
+                    if neighbors[3] == neighbors[5] == 1 and \
+                            neighbors[0] == neighbors[1] == neighbors[2] == 0 and \
+                            neighbors[6] == neighbors[7] == neighbors[8] == -1:
+                        coord1 = neighbor_num_to_coord(6, (x, y))
+                        coord2 = neighbor_num_to_coord(8, (x, y))
+                        flag_if_new(coord1, neighbor_indexes[6], moves, info)
+                        flag_if_new(coord2, neighbor_indexes[8], moves, info)
+                    elif neighbors[3] == neighbors[5] == 1 and \
+                            neighbors[0] == neighbors[1] == neighbors[2] == -1 and \
+                            neighbors[6] == neighbors[7] == neighbors[8] == 0:
+                        coord1 = neighbor_num_to_coord(0, (x, y))
+                        coord2 = neighbor_num_to_coord(2, (x, y))
+                        flag_if_new(coord1, neighbor_indexes[0], moves, info)
+                        flag_if_new(coord2, neighbor_indexes[2], moves, info)
+                    elif neighbors[1] == neighbors[7] == 1 and \
+                            neighbors[0] == neighbors[3] == neighbors[6] == -1 and \
+                            neighbors[2] == neighbors[5] == neighbors[8] == 0:
+                        coord1 = neighbor_num_to_coord(0, (x, y))
+                        coord2 = neighbor_num_to_coord(6, (x, y))
+                        flag_if_new(coord1, neighbor_indexes[0], moves, info)
+                        flag_if_new(coord2, neighbor_indexes[6], moves, info)
+                    elif neighbors[1] == neighbors[7] == 1 and \
+                            neighbors[0] == neighbors[3] == neighbors[6] == 0 and \
+                            neighbors[2] == neighbors[5] == neighbors[8] == -1:
+                        coord1 = neighbor_num_to_coord(2, (x, y))
+                        coord2 = neighbor_num_to_coord(8, (x, y))
+                        flag_if_new(coord1, neighbor_indexes[2], moves, info)
+                        flag_if_new(coord2, neighbor_indexes[8], moves, info)
 
     for y in range(info.game_dim[1]):
         for x in range(info.game_dim[0]):
