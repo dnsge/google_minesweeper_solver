@@ -2,6 +2,7 @@ from functools import partial
 
 import pyautogui
 
+from google_minesweeper import values
 from google_minesweeper.util import get_grid_index, is_interesting_color, is_undiscovered, rgb_close, \
     get_neighbor_indexes, get_neighbors, neighbor_num_to_coord, coord_in_game, rgb_closes
 
@@ -91,11 +92,11 @@ def get_game_state(info: GameInfo):
         number = 0  # Discovered & Empty 0
 
         if index in info.flagged:
-            number = -2
+            number = values.FLAGGED
         else:
             for color in map(lambda v: v[1], colors):
-                if is_undiscovered(color):  # Undiscovered -1
-                    number = -1
+                if is_undiscovered(color):  # Undiscovered
+                    number = values.UNDISCOVERED
                 if rgb_close(color, (51, 118, 203, 255)):  # Blue 1
                     number = 1
                 elif rgb_closes(color, [(80, 139, 70, 255), (46, 126, 46, 255)]):  # Green 2
@@ -122,7 +123,7 @@ def flag_if_new(coord, idx, lst, info: GameInfo, game_array):
     if tup not in lst and idx not in info.flagged and coord_in_game(info, coord):
         lst.append(tup)
         info.flagged.append(idx)
-        game_array[idx] = -2  # Flag in memory
+        game_array[idx] = values.FLAGGED  # Flag in memory
         return True
 
     return False
@@ -144,12 +145,12 @@ def find_moves(info: GameInfo, game_array):
                 print('neighbors:', str(neighbors))
                 print('flags:', str(info.flagged))
 
-                undiscovered = neighbors.count(-1)
-                flagged = neighbors.count(-2)
+                undiscovered = neighbors.count(values.UNDISCOVERED)
+                flagged = neighbors.count(values.FLAGGED)
 
                 if undiscovered + flagged == value:
                     for i in range(9):
-                        if neighbors[i] == -1 and i != 4:
+                        if neighbors[i] == values.UNDISCOVERED and i != 4:
                             f_coord = neighbor_num_to_coord(i, (x, y))
                             f_index = neighbor_indexes[i]
                             flag_if_new(f_coord, f_index, moves, info, game_array)
@@ -157,29 +158,29 @@ def find_moves(info: GameInfo, game_array):
                 # Try pattern recognition
                 if value == 2:
                     if neighbors[3] == neighbors[5] == 1 and \
-                            neighbors[0] == neighbors[1] == neighbors[2] == 0 and \
-                            neighbors[6] == neighbors[7] == neighbors[8] == -1:
+                            neighbors[0] == neighbors[1] == neighbors[2] == values.EMPTY and \
+                            neighbors[6] == neighbors[7] == neighbors[8] == values.UNDISCOVERED:
                         coord1 = neighbor_num_to_coord(6, (x, y))
                         coord2 = neighbor_num_to_coord(8, (x, y))
                         flag_if_new(coord1, neighbor_indexes[6], moves, info, game_array)
                         flag_if_new(coord2, neighbor_indexes[8], moves, info, game_array)
                     elif neighbors[3] == neighbors[5] == 1 and \
-                            neighbors[0] == neighbors[1] == neighbors[2] == -1 and \
-                            neighbors[6] == neighbors[7] == neighbors[8] == 0:
+                            neighbors[0] == neighbors[1] == neighbors[2] == values.UNDISCOVERED and \
+                            neighbors[6] == neighbors[7] == neighbors[8] == values.EMPTY:
                         coord1 = neighbor_num_to_coord(0, (x, y))
                         coord2 = neighbor_num_to_coord(2, (x, y))
                         flag_if_new(coord1, neighbor_indexes[0], moves, info, game_array)
                         flag_if_new(coord2, neighbor_indexes[2], moves, info, game_array)
                     elif neighbors[1] == neighbors[7] == 1 and \
-                            neighbors[0] == neighbors[3] == neighbors[6] == -1 and \
-                            neighbors[2] == neighbors[5] == neighbors[8] == 0:
+                            neighbors[0] == neighbors[3] == neighbors[6] == values.UNDISCOVERED and \
+                            neighbors[2] == neighbors[5] == neighbors[8] == values.EMPTY:
                         coord1 = neighbor_num_to_coord(0, (x, y))
                         coord2 = neighbor_num_to_coord(6, (x, y))
                         flag_if_new(coord1, neighbor_indexes[0], moves, info, game_array)
                         flag_if_new(coord2, neighbor_indexes[6], moves, info, game_array)
                     elif neighbors[1] == neighbors[7] == 1 and \
-                            neighbors[0] == neighbors[3] == neighbors[6] == 0 and \
-                            neighbors[2] == neighbors[5] == neighbors[8] == -1:
+                            neighbors[0] == neighbors[3] == neighbors[6] == values.EMPTY and \
+                            neighbors[2] == neighbors[5] == neighbors[8] == values.UNDISCOVERED:
                         coord1 = neighbor_num_to_coord(2, (x, y))
                         coord2 = neighbor_num_to_coord(8, (x, y))
                         flag_if_new(coord1, neighbor_indexes[2], moves, info, game_array)
@@ -192,10 +193,10 @@ def find_moves(info: GameInfo, game_array):
             if value > 0:
                 neighbor_indexes = get_neighbor_indexes((x, y), info.game_dim[0], info.game_dim[1])
                 neighbors = get_neighbors(neighbor_indexes, game_array)
-                flagged = neighbors.count(-2)
+                flagged = neighbors.count(values.FLAGGED)
                 if flagged == value:
                     for i in range(9):
-                        if neighbors[i] == -1 and i != 4:
+                        if neighbors[i] == values.UNDISCOVERED and i != 4:
                             c_coord = neighbor_num_to_coord(i, (x, y))
                             c_index = neighbor_indexes[i]
                             tup = ('click', c_coord)

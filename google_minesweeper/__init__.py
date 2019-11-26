@@ -2,6 +2,7 @@ import time
 
 import pyautogui
 
+from google_minesweeper import values
 from google_minesweeper.game import GameInfo, locate_game, get_game_state, find_moves
 from google_minesweeper.util import get_grid_coord
 
@@ -17,7 +18,7 @@ def click_coord(info: GameInfo, coord):
 
 
 def check_win(game: GameInfo, state):
-    return state.count(-1) == game.flag_total - len(game.flagged)
+    return state.count(values.UNDISCOVERED) == game.flag_total - len(game.flagged)
 
 
 def fail_game(game: GameInfo):
